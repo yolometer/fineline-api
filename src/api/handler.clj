@@ -7,6 +7,7 @@
 (defroutes app-routes
   (GET "/" [] "Hello World")
   (GET "/project/:id" [] project/load-project-from-req)
+  (POST "/project/:id" [] project/handle-project-payload)
   (route/not-found "Not Found"))
 
 (def app

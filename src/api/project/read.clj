@@ -1,4 +1,4 @@
-(ns api.project.project
+(ns api.project.read
   (:require [clojure.data.json :as json]))
 
 (defn req-id [req] (-> req :route-params :id))
@@ -12,12 +12,3 @@
 (defn get-project-since
   [timestamp]
   timestamp)
-
-(defn handle-project-payload
-  [req]
-  (let [id (req-id req)
-        parsed-body (json/read-str
-                      (slurp
-                        (:body req)))]
-    (println parsed-body)
-    parsed-body))

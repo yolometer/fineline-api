@@ -3,7 +3,8 @@
   :url "http://example.com/FIXME"
   :dependencies [[org.clojure/data.json "0.2.5"]
                  [org.clojure/clojure "1.6.0"]
-                 [compojure "1.1.8"]]
+                 [compojure "1.1.8"]
+                 [clojurewerkz/neocons "3.0.0"]]
   :plugins [[lein-ring "0.8.11"]]
   :ring {:handler api.handler/app}
   :profiles

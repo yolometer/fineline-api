@@ -13,6 +13,7 @@
   (POST "/project" [] proj-write/handle-new-project)
   (GET "/project/:id" [] proj-read/load-project-from-req)
   (POST "/project/:id" [] proj-write/handle-new-project)
+  (GET "/project/:id/users" [] proj-read/get-all-users-handler)
 
   (POST "/user" [] create-user/handle-new-user)
   (GET "/user/:id" [] fetch-user/user-by-id-handler)

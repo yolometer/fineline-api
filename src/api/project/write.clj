@@ -3,6 +3,7 @@
             [api.user.fetch :as fetch-user]
             [clojure.data.json :as json]
             [clojurewerkz.neocons.rest.nodes :as nn]
+            [clojurewerkz.neocons.rest.cypher :as cy]
             [clojurewerkz.neocons.rest.relationships :as nrl]))
 
 (defn req-id [req] (-> req :route-params :id))
@@ -16,13 +17,26 @@
 ; Get misc metadata as nodes
 (defn make-root-project-node
   [payload]
-  (nn/create db/conn {:title (get payload "title")
-                      :description (get payload "description")}))
+  (cy/tquery db/conn
+             "CREATE (proj:Project {title:{title}, description:{description}})
+              RETURN ID(proj) as id"
+              {:title (get payload "title")
+               :description (get payload "description")}))
 
-;; TODO map user to project
 (defn make-participant-rel
-  [uid]
-  uid)
+  [pid uid]
+  (println 
+  (cy/tquery db/conn
+             "MATCH (user),(proj)
+             WHERE ID(user)={uid} AND ID(proj)={pid}
+             CREATE (user)-[r:PARTICIPANT]->(proj)
+             RETURN user"
+             {:uid uid :pid pid})))
+
+(defn make-all-participant-rels
+  [proj-id user-id-list]
+  (println
+  (map (fn [uid] (make-participant-rel proj-id uid)) user-id-list)))
 
 ;;  (let [uid-list (get payload "participants")]
 (defn get-all-participant-nodes
@@ -34,9 +48,10 @@
 (defn handle-new-project
   [req]
   (let [parsed-body (parse-payload req)
-        root-node (make-root-project-node parsed-body)
-        participant-nodes (get-all-participant-nodes
-                            (get parsed-body "participants"))]
-    (map :id participant-nodes)))
+        root-project-node (first (make-root-project-node parsed-body))]
+    (make-all-participant-rels
+      (get root-project-node "id")
+      (get parsed-body "participants"))
+    (str (get root-project-node "id"))))
 
 

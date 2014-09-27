@@ -9,11 +9,14 @@
 
 (defroutes app-routes
   (GET "/" [] "Hello World")
+
   (POST "/project" [] proj-write/handle-new-project)
   (GET "/project/:id" [] proj-read/load-project-from-req)
   (POST "/project/:id" [] proj-write/handle-new-project)
+
   (POST "/user" [] create-user/handle-new-user)
   (GET "/user/:id" [] fetch-user/user-by-id-handler)
+
   (route/not-found "Not Found"))
 
 (def app

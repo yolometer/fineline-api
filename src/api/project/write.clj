@@ -1,5 +1,6 @@
 (ns api.project.write
   (:require [api.db.db-util :as db]
+            [api.user.fetch :as fetch-user]
             [clojure.data.json :as json]
             [clojurewerkz.neocons.rest.nodes :as nn]
             [clojurewerkz.neocons.rest.relationships :as nrl]))
@@ -24,20 +25,18 @@
   uid)
 
 ;;  (let [uid-list (get payload "participants")]
-(defn get-all-participants-nodes
+(defn get-all-participant-nodes
   [uid-list]
-  (lazy-seq
-    (cons
-      (make-participant-rel
-        (first uid-list))
-      (get-all-participants-nodes (next uid-list)))))
+  (map fetch-user/user-by-id uid-list))
 
 ;; TODO
 ;; Wrap this in a transaction. The WHOLE DAMN THING
 (defn handle-new-project
   [req]
   (let [parsed-body (parse-payload req)
-        root-node (make-root-project-node parsed-body)]
-    root-node))
+        root-node (make-root-project-node parsed-body)
+        participant-nodes (get-all-participant-nodes
+                            (get parsed-body "participants"))]
+    (map :id participant-nodes)))
 
 

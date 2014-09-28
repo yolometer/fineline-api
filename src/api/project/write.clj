@@ -35,8 +35,7 @@
 
 (defn make-all-participant-rels
   [proj-id user-id-list]
-  (println
-  (map (fn [uid] (make-participant-rel proj-id uid)) user-id-list)))
+  (map (fn [uid] (make-participant-rel proj-id uid)) user-id-list))
 
 (defn get-all-participant-nodes
   [uid-list]
@@ -52,5 +51,4 @@
       (get root-project-node "id")
       (get parsed-body "participants"))
     (str (get root-project-node "id"))))
-
 

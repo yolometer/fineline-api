@@ -3,15 +3,19 @@
             [clojure.data.json :as json]
             [clojurewerkz.neocons.rest.cypher :as cy]))
 
-(defn req-id [req] (-> req :route-params :id))
+(defn req-id [req]
+  (Long/parseLong
+    (-> req :route-params :id)))
 
 (defn get-project-participants
   [pid]
-  (cy/tquery db/conn
-              "MATCH (proj)
-              WHERE ID(proj)={pid}
-              RETURN proj"
-             {:pid pid}))
+  (map (fn [x] (assoc (:data (get x "user"))
+                      "id" (get x "uid")))
+      (cy/tquery db/conn
+                 "MATCH (user)-[PARTICIPANT]->(proj)
+                  WHERE ID(proj)={pid}
+                  RETURN user, ID(user) as uid"
+                 {:pid 49})))
 
 ; Parse shit from req
 (defn load-project-from-req
@@ -22,4 +26,6 @@
 (defn get-all-users-handler
   [req]
   (let [pid (req-id req)]
-    (println (get-project-participants pid))))
+    (println (get-project-participants pid))
+    (json/write-str 
+      (get-project-participants pid))))

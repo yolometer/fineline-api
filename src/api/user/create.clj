@@ -1,6 +1,7 @@
 (ns api.user.create
   (:require [api.db.db-util :as db]
             [clojure.data.json :as json]
+            [clojurewerkz.neocons.rest.cypher :as cy]
             [clojurewerkz.neocons.rest.nodes :as nn]
             [clojurewerkz.neocons.rest.labels :as nl]))
 
@@ -14,16 +15,17 @@
 ;; Create user node
 (defn make-user-node
   [data]
-  (let [node (nn/create
-                db/conn
-                {:email (get data "email")
-                :name (get data "name")})]
-    (nl/add db/conn node "User")))
+  (let [user-data {:email (get data "email") :name (get data "name")}]
+    (cy/tquery db/conn
+               "CREATE (u:User {name: {name}, email: {email}})
+                RETURN ID(u) as id"
+               user-data)))
 
 ;; Creates user node and writes node id back
 (defn handle-new-user
   [req]
   ;; TODO VALIDATE
   (let [body (parse-payload req)
-        user-node (make-user-node body)]
-    (str (:id user-node))))
+        user-node (first (make-user-node body))]
+    ;; Write back user ID
+    (str (get user-node "id"))))

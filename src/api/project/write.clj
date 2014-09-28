@@ -23,22 +23,21 @@
               {:title (get payload "title")
                :description (get payload "description")}))
 
+;; Adds participant relationship starting at UID to PID
 (defn make-participant-rel
   [pid uid]
-  (println 
   (cy/tquery db/conn
              "MATCH (user),(proj)
              WHERE ID(user)={uid} AND ID(proj)={pid}
              CREATE (user)-[r:PARTICIPANT]->(proj)
              RETURN user"
-             {:uid uid :pid pid})))
+             {:uid uid :pid pid}))
 
 (defn make-all-participant-rels
   [proj-id user-id-list]
   (println
   (map (fn [uid] (make-participant-rel proj-id uid)) user-id-list)))
 
-;;  (let [uid-list (get payload "participants")]
 (defn get-all-participant-nodes
   [uid-list]
   (map fetch-user/user-by-id uid-list))

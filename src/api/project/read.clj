@@ -11,18 +11,14 @@
               "MATCH (proj)
               WHERE ID(proj)={pid}
               RETURN proj"
-             {:pid 27}))
+             {:pid pid}))
 
 ; Parse shit from req
 (defn load-project-from-req
   [req]
   (str {:_id (req-id req)}))
 
-; Get all project data that has been updated since a specific time
-(defn get-project-since
-  [timestamp]
-  timestamp)
-
+;; TODO return all users on a project
 (defn get-all-users-handler
   [req]
   (let [pid (req-id req)]

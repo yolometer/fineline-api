@@ -28,9 +28,9 @@
   [pid uid]
   (cy/tquery db/conn
              "MATCH (user),(proj)
-             WHERE ID(user)={uid} AND ID(proj)={pid}
-             CREATE (user)-[r:PARTICIPANT]->(proj)
-             RETURN user"
+              WHERE ID(user)={uid} AND ID(proj)={pid}
+              CREATE (user)-[r:PARTICIPANT]->(proj)
+              RETURN user"
              {:uid uid :pid pid}))
 
 (defn make-all-participant-rels

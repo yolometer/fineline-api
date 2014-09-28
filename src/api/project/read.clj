@@ -15,7 +15,7 @@
                  "MATCH (user)-[PARTICIPANT]->(proj)
                   WHERE ID(proj)={pid}
                   RETURN user, ID(user) as uid"
-                 {:pid 49})))
+                 {:pid pid})))
 
 ; Parse shit from req
 (defn load-project-from-req
@@ -26,6 +26,5 @@
 (defn get-all-users-handler
   [req]
   (let [pid (req-id req)]
-    (println (get-project-participants pid))
     (json/write-str 
       (get-project-participants pid))))

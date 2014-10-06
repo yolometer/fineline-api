@@ -1,9 +1,7 @@
 (ns api.user.create
   (:require [api.db.db-util :as db]
             [clojure.data.json :as json]
-            [clojurewerkz.neocons.rest.cypher :as cy]
-            [clojurewerkz.neocons.rest.nodes :as nn]
-            [clojurewerkz.neocons.rest.labels :as nl]))
+            [clojurewerkz.neocons.rest.cypher :as cy]))
 
 
 (defn parse-payload
@@ -26,6 +24,6 @@
   [req]
   ;; TODO VALIDATE
   (let [body (parse-payload req)
-        user-node (first (make-user-node body))]
+        user-node (make-user-node body)]
     ;; Write back user ID
-    (str (get user-node "id"))))
+    (str (get (first user-node) "id"))))

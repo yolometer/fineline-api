@@ -12,7 +12,8 @@
 
   (POST "/project" [] proj-write/handle-new-project)
   (GET "/project/:id" [] proj-read/load-project-from-req)
-  (GET "/project/:id/users" [] proj-read/get-all-users-handler)
+  (GET "/project/:id/participants" [] proj-read/get-all-users-handler)
+  (POST "/project/:id/participants" [] proj-write/participant-rel-handler)
 
   (POST "/user" [] create-user/handle-new-user)
   (GET "/user/:id" [] fetch-user/user-by-id-handler)

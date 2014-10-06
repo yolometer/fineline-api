@@ -22,7 +22,6 @@
   [req]
   (str {:_id (req-id req)}))
 
-;; TODO return all users on a project
 (defn get-all-users-handler
   [req]
   (let [pid (req-id req)]
